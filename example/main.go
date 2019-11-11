@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/dmowcomber/go-ws2812fxfirmata"
 	"gobot.io/x/gobot/platforms/firmata"
 )
 
@@ -13,7 +14,7 @@ func main() {
 
 	neoPixelPin := "5"
 	neoPixelCount := uint16(7)
-	neoPixel := NewNeopixelDriver(firmataAdaptor.Adaptor, neoPixelPin, neoPixelCount)
+	neoPixel := ws2812fxfirmata.NewNeopixelDriver(firmataAdaptor.Adaptor, neoPixelPin, neoPixelCount)
 
 	fmt.Println("connecting")
 	err := firmataAdaptor.Connect()
@@ -21,6 +22,9 @@ func main() {
 		fmt.Println(err.Error())
 		return
 	}
+
+	// TODO: this is redundant but without it pixels don't show correctly. need to fix this
+	neoPixel.SetConfig(5, 7)
 
 	neoPixel.SetBrightness(uint8(255))
 	for {
