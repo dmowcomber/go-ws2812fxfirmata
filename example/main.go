@@ -12,9 +12,7 @@ func main() {
 	arduinoAddress := "192.168.1.113:3030"
 	firmataAdaptor := firmata.NewTCPAdaptor(arduinoAddress)
 
-	neoPixelPin := "5"
-	neoPixelCount := uint16(7)
-	neoPixel := ws2812fxfirmata.NewNeopixelDriver(firmataAdaptor.Adaptor, neoPixelPin, neoPixelCount)
+	ws2812fx := ws2812fxfirmata.NewNeopixelDriver(firmataAdaptor.Adaptor)
 
 	fmt.Println("connecting")
 	err := firmataAdaptor.Connect()
@@ -23,13 +21,15 @@ func main() {
 		return
 	}
 
-	// TODO: this is redundant but without it pixels don't show correctly. need to fix this
-	neoPixel.SetConfig(5, 7)
+	ws2812fxPin := uint8(5)
+	ws2812fxCount := uint16(7)
+	ws2812fx.SetConfig(ws2812fxPin, ws2812fxCount)
 
-	neoPixel.SetBrightness(uint8(255))
+	ws2812fx.SetBrightness(uint8(1))
+
 	for {
 		time.Sleep(5 * time.Second)
-		neoPixel.RandomMode()
+		ws2812fx.ModeCycle()
 	}
 
 }
